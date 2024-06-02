@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -7,6 +8,7 @@ public class Player : MonoBehaviour
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
+    [SerializeField] Attack attack;
 
 
     [Header("Adjustable Values")]
@@ -14,43 +16,91 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpSpeed = 500;
 
 
-    float rotationValue = 1;
+    [Header("Animation Values")]
 
 
-    public void Move()
+    float rotationChangeValue = 1;
+    float rotationValue = 180;
+
+
+
+
+
+    public void PlayerPlay()
+    {
+        PlayerMovement();
+        PlayAnimations();
+        attack.SwordAttack();
+    }
+    void PlayerMovement()
+    {
+        Move();
+        Jump();
+        Rotate();
+    }
+    void PlayAnimations()
+    {
+        MoveAnimation();
+        JumpAnimation();
+        SwordAnimation();
+    }
+
+
+
+    //Player move methods
+    void Move()
     {
         float horizontalMovement = Input.GetAxis("Horizontal");
         Vector2 move = new Vector2(horizontalMovement * moveSpeed * Time.deltaTime, playerRigidbody.velocity.y);
         playerRigidbody.velocity = move;
     }
 
-    public void Jump()
+    void Jump()
     {
         if (Input.GetKey(KeyCode.Space) && playerRigidbody.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
-            Vector2 move = new Vector2(playerRigidbody.velocity.x, jumpSpeed * Time.deltaTime);
-            playerRigidbody.velocity = move;
+            Vector2 jump = new Vector2(playerRigidbody.velocity.x, jumpSpeed * Time.deltaTime);
+            playerRigidbody.velocity = jump;
         }
     }
 
-    public void Rotate()
+    void Rotate()
     {
         if (Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon)
         {
-            if (playerRigidbody.velocity.x < -rotationValue)
-            {
-                transform.rotation = Quaternion.Euler(transform.rotation.x, 180, transform.rotation.z);
-            }
-            else if (playerRigidbody.velocity.x > rotationValue)
-            {
-                transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z);
-            }
+            if (playerRigidbody.velocity.x < -rotationChangeValue)
+                transform.rotation = Quaternion.Euler(transform.rotation.x, rotationValue, transform.rotation.z);
+            else if (playerRigidbody.velocity.x > rotationChangeValue)
+                transform.rotation = Quaternion.Euler(transform.rotation.x, rotationValue - rotationValue, transform.rotation.z);
         }
     }
 
-    public void MoveAnimation()
+
+    //Player Animation Methods
+    void MoveAnimation()
+    {
+        if (Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon)
+            playerAnimator.SetBool("isRunning", true);
+        else
+            playerAnimator.SetBool("isRunning", false);
+    }
+
+    void JumpAnimation()
     {
 
+        if (!playerRigidbody.IsTouchingLayers(LayerMask.GetMask("Ground")))
+            playerAnimator.SetBool("isJump", true);
+        else if (playerRigidbody.IsTouchingLayers(LayerMask.GetMask("Ground")))
+            playerAnimator.SetBool("isJump", false);
+    }
+
+    void SwordAnimation()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            playerAnimator.SetTrigger("Attack");
+        }
     }
 }
+
 

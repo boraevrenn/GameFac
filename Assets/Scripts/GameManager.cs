@@ -11,16 +11,11 @@ public class GameManager : MonoBehaviour
 
 
 
-    void Update()
-    {
 
-    }
 
     void FixedUpdate()
     {
-        player.Move();
-        player.Rotate();
-        player.Jump();
+        player.PlayerPlay();
     }
 
 }
