@@ -6,5 +6,8 @@ using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
+  [SerializeField] Animator enemyAnimator;
+
+
 
 }

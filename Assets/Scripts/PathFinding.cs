@@ -13,6 +13,7 @@ public class PathFinding : MonoBehaviour
 
     [Header("Enemy Values")]
     [SerializeField] float enemyMoveSpeed;
+    [SerializeField] bool isPatrolling;
 
 
 
@@ -31,33 +32,60 @@ public class PathFinding : MonoBehaviour
     [SerializeField] float generateRandomNumberTimerTotal;
     [SerializeField] int RandomTurnBackNumber;
 
+    [Header("Patrol Values")]
+    [SerializeField] float patrolTimer;
+    [SerializeField] float patrolTimerTotal;
+
+
 
 
     public void Pathfinding()
     {
-
-        float distance = CalculateEnemyPlayerDistance();
-        ReturnNumberForWalkBack(distance);
-        ReturnTimer(distance);
-
-
-        if (distance <= maximumDistance && distance >= minimumDistance
-        && waitForReturn <= Mathf.Epsilon
-        && randomNumberForWalkBackOrForward != 1)
+        if (!isPatrolling)
         {
-            EnemyMoveToward(player.transform.position, enemyMoveSpeed);
+            float distance = CalculateEnemyPlayerDistance();
+            ReturnNumberForWalkBack(distance);
+            ReturnTimer(distance);
+
+
+            if (distance <= maximumDistance && distance >= minimumDistance
+            && waitForReturn <= Mathf.Epsilon
+            && randomNumberForWalkBackOrForward != RandomTurnBackNumber)
+            {
+                EnemyMoveToward(player.transform.position, enemyMoveSpeed);
+            }
+
+
+            else if (distance <= minimumDistance || randomNumberForWalkBackOrForward == RandomTurnBackNumber)
+            {
+                EnemyMoveToward(WalkBack.transform.position, enemyMoveSpeed);
+            }
         }
+    }
+    void Patrol()
+    {
+        float distance = CalculateEnemyPlayerDistance();
 
+        if (distance >= maximumDistance)
+            isPatrolling = true;
+        else
+            isPatrolling = false;
 
-        else if (distance <= minimumDistance || randomNumberForWalkBackOrForward == RandomTurnBackNumber)
+        if (isPatrolling)
         {
-            EnemyMoveToward(WalkBack.transform.position, enemyMoveSpeed);
+
         }
     }
 
+
+    void PatrolTimer()
+    {
+
+    }
     void ReturnTimer(float distance)
     {
         waitForReturn -= Time.deltaTime;
+
         if (distance <= minimumDistance)
         {
             waitForReturn = waitTimeTotal;
@@ -85,6 +113,7 @@ public class PathFinding : MonoBehaviour
 
     void EnemyMoveToward(Vector2 positionObject, float speed)
     {
-        transform.position = Vector2.MoveTowards(transform.position, positionObject, speed * Time.deltaTime);
+        Vector2 positionObjectX = new Vector2(positionObject.x, transform.position.y);
+        transform.position = Vector2.MoveTowards(transform.position, positionObjectX, speed * Time.deltaTime);
     }
 }
