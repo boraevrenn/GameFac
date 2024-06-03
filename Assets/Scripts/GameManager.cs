@@ -7,15 +7,20 @@ public class GameManager : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] Player player;
+    [SerializeField] PathFinding pathFinding;
 
 
 
-
+    void Update()
+    {
+        player.PlayAnimations();
+        pathFinding.Pathfinding();
+    }
 
 
     void FixedUpdate()
     {
-        player.PlayerPlay();
+        player.PlayerMovement();
     }
 
 }

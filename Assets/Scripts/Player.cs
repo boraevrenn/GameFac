@@ -26,19 +26,15 @@ public class Player : MonoBehaviour
 
 
 
-    public void PlayerPlay()
-    {
-        PlayerMovement();
-        PlayAnimations();
-        attack.ApplyAttack();
-    }
-    void PlayerMovement()
+
+    public void PlayerMovement()
     {
         Move();
         Jump();
         Rotate();
+        attack.ApplyAttack();
     }
-    void PlayAnimations()
+    public void PlayAnimations()
     {
         MoveAnimation();
         JumpAnimation();
