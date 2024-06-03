@@ -1125,7 +1125,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
-  attackTimer: 0
+  attackTimer: 0.5
+  attackTimerTotal: 1
   radius: 0.55
   attackArea: {x: 0.3, y: 0}
 --- !u!1 &1330841783

@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     {
         PlayerMovement();
         PlayAnimations();
-        attack.SwordAttack();
+        attack.ApplyAttack();
     }
     void PlayerMovement()
     {
@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
 
     void SwordAnimation()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && attack.attackTimer >= attack.attackTimerTotal)
         {
             playerAnimator.SetTrigger("Attack");
         }
