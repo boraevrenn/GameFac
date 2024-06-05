@@ -11,16 +11,5 @@ public class GameManager : MonoBehaviour
 
 
 
-    void Update()
-    {
-        player.PlayAnimations();
-        pathFinding.Pathfinding();
-    }
-
-
-    void FixedUpdate()
-    {
-        player.PlayerMovement();
-    }
 
 }

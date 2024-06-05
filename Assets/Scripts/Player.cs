@@ -24,7 +24,15 @@ public class Player : MonoBehaviour
 
 
 
+    void Update()
+    {
+        PlayAnimations();
+    }
 
+    void FixedUpdate()
+    {
+        PlayerMovement();
+    }
 
 
     public void PlayerMovement()
