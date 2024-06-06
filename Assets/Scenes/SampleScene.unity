@@ -122,50 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &76504188
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 76504190}
-  - component: {fileID: 76504189}
-  m_Layer: 0
-  m_Name: Timer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &76504189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 76504188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38a6f23fff2765d45a0aa2032ab1c5cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &76504190
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 76504188}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &428170617
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +345,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 647889710}
+  - component: {fileID: 647889716}
   - component: {fileID: 647889715}
   - component: {fileID: 647889714}
   - component: {fileID: 647889713}
@@ -462,14 +419,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647889708}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
-  m_LocalPosition: {x: 2.46, y: 0.172, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.03, y: 0.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 455855096}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &647889711
 Rigidbody2D:
   serializedVersion: 4
@@ -576,19 +533,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveRight: {x: 1, y: 0}
   moveLeft: {x: -1, y: 0}
-  transformForRun: {fileID: 647889710}
+  transformForMove: {fileID: 647889710}
   player: {fileID: 957101370}
   playerRigidbody: {fileID: 957101368}
+  timer: {fileID: 647889716}
   newPlayerPosition: {x: 0, y: 0}
-  enemySpeed: 5
+  isLeftLayerPlayer: 0
+  isRightLayerPlayer: 0
+  enemySpeed: 2
   isPlayerInMaximumDistance: 0
   isPlayerInMinumumDistance: 0
   enemyAndPlayerDistance: 0
   maximumDistance: 5
-  minimumDistance: 1
-  extendRayCastLeft: {x: -1, y: 0}
-  extendRayCastRight: {x: 1, y: 0}
+  minimumDistance: 0.7
+  extendRayCastLeft: {x: -0.5, y: 0}
+  extendRayCastRight: {x: 0.5, y: 0}
   rayDistance: 4
+  isMinumumDistanceTimerSmallerThanZero: 0
+--- !u!114 &647889716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647889708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a6f23fff2765d45a0aa2032ab1c5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathFinding: {fileID: 647889715}
+  waitMinumumDistanceTimer: 0
+  waitMinimumDistanceTotalTime: 0.5
 --- !u!1 &784995237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,4 +1365,3 @@ SceneRoots:
   - {fileID: 495143139}
   - {fileID: 647889710}
   - {fileID: 957101369}
-  - {fileID: 76504190}

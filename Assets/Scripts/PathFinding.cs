@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,16 +10,19 @@ public class PathFinding : MonoBehaviour
     [Header("Vector And Transfor Values")]
     [SerializeField] Vector2 moveRight;
     [SerializeField] Vector2 moveLeft;
-    [SerializeField] Transform transformForRun;
+    [SerializeField] Transform transformForMove;
 
     [Header("Components")]
     [SerializeField] Player player;
     [SerializeField] Rigidbody2D playerRigidbody;
+    [SerializeField] Timer timer;
 
 
 
     [Header("Player Values")]
     [SerializeField] Vector2 newPlayerPosition;
+    [SerializeField] bool isLeftLayerPlayer;
+    [SerializeField] bool isRightLayerPlayer;
 
 
     [Header("Enemy Values")]
@@ -27,8 +31,8 @@ public class PathFinding : MonoBehaviour
 
 
     [Header("Distance Boolean Values")]
-    [SerializeField] bool isPlayerInMaximumDistance;
-    [SerializeField] bool isPlayerInMinumumDistance;
+    public bool isPlayerInMaximumDistance;
+    public bool isPlayerInMinumumDistance;
 
 
 
@@ -47,16 +51,23 @@ public class PathFinding : MonoBehaviour
     [SerializeField] float rayDistance;
 
 
+    [Header("Timer Values")]
+    [SerializeField] bool isMinumumDistanceTimerSmallerThanZero;
 
 
 
     void FixedUpdate()
     {
+
         newPlayerPosition = new Vector2(player.transform.position.x, playerRigidbody.velocity.y);
         enemyAndPlayerDistance = ReturnDistance();
         CalculateAndReturnBooleanFromDistance();
+        MoveToPlayer();
         CreateRayForEnemy();
-        DefineDirection();
+        DefineEnemyDirection();
+        isMinumumDistanceTimerSmallerThanZero = timer.ReturnIsMinumumDistanceTimerSmallerZero();
+        MoveEnemyOpposite();
+        EnemyRotationWhenRayHitsPlayer();
     }
 
     float ReturnDistance()
@@ -66,7 +77,9 @@ public class PathFinding : MonoBehaviour
 
     void CalculateAndReturnBooleanFromDistance()
     {
-        if (enemyAndPlayerDistance <= maximumDistance && enemyAndPlayerDistance > minimumDistance)
+
+        if (enemyAndPlayerDistance <= maximumDistance && enemyAndPlayerDistance > minimumDistance
+        && isMinumumDistanceTimerSmallerThanZero)
         {
             isPlayerInMinumumDistance = false;
             isPlayerInMaximumDistance = true;
@@ -89,23 +102,61 @@ public class PathFinding : MonoBehaviour
     }
 
 
+    void MoveToPlayer()
+    {
+
+        if (isPlayerInMaximumDistance)
+        {
+            MoveEnemy(newPlayerPosition);
+        }
+    }
+
     void CreateRayForEnemy()
     {
         if (isPlayerInMaximumDistance || isPlayerInMinumumDistance)
         {
             rayForEnemyToSeePlayerLeft = Physics2D.Raycast((Vector2)transform.position + extendRayCastLeft, Vector2.left, rayDistance);
             rayForEnemyToSeePlayerRight = Physics2D.Raycast((Vector2)transform.position + extendRayCastRight, Vector2.right, rayDistance);
-            Debug.Log(rayForEnemyToSeePlayerLeft.transform.name);
-            Debug.Log(rayForEnemyToSeePlayerRight.transform.name);
+        }
+    }
+
+    void DefineEnemyDirection()
+    {
+        if (rayForEnemyToSeePlayerLeft.transform != null)
+        {
+            isRightLayerPlayer = false;
+            isLeftLayerPlayer = LayerMask.LayerToName(rayForEnemyToSeePlayerLeft.transform.gameObject.layer) == "Player";
+        }
+        else if (rayForEnemyToSeePlayerRight.transform != null)
+        {
+            isLeftLayerPlayer = false;
+            isRightLayerPlayer = LayerMask.LayerToName(rayForEnemyToSeePlayerRight.transform.gameObject.layer) == "Player";
+        }
+        else
+        {
+            isRightLayerPlayer = false;
+            isLeftLayerPlayer = false;
         }
     }
 
 
-    void DefineDirection()
+    void MoveEnemyOpposite()
     {
-        if (isPlayerInMinumumDistance && LayerMask.LayerToName(rayForEnemyToSeePlayerLeft.transform.gameObject.layer) == "Player")
+        if (isPlayerInMinumumDistance && isLeftLayerPlayer)
+            MoveEnemy((Vector2)transformForMove.position + moveRight);
+        else if (isPlayerInMinumumDistance && isRightLayerPlayer)
+            MoveEnemy((Vector2)transformForMove.position + moveLeft);
+    }
+
+    void EnemyRotationWhenRayHitsPlayer()
+    {
+        if (isLeftLayerPlayer)
         {
-            MoveEnemy((Vector2)transformForRun.position + moveRight);
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (isRightLayerPlayer)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
         }
     }
 
