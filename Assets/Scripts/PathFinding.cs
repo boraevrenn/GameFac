@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PathFinding : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PathFinding : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Timer timer;
+    [SerializeField] Rigidbody2D enemyRigidbody;
 
 
 
@@ -27,6 +29,7 @@ public class PathFinding : MonoBehaviour
 
     [Header("Enemy Values")]
     [SerializeField] float enemySpeed;
+    [SerializeField] bool isEnemySeeRight = true;
 
 
 
@@ -51,23 +54,28 @@ public class PathFinding : MonoBehaviour
     [SerializeField] float rayDistance;
 
 
+
     [Header("Timer Values")]
     [SerializeField] bool isMinumumDistanceTimerSmallerThanZero;
+
+    [SerializeField] bool isMinumumDistanceTimerGreaterThanZero;
 
 
 
     void FixedUpdate()
     {
 
-        newPlayerPosition = new Vector2(player.transform.position.x, playerRigidbody.velocity.y);
+        newPlayerPosition = new Vector2(player.transform.position.x, enemyRigidbody.velocity.y);
         enemyAndPlayerDistance = ReturnDistance();
         CalculateAndReturnBooleanFromDistance();
         MoveToPlayer();
         CreateRayForEnemy();
         DefineEnemyDirection();
         isMinumumDistanceTimerSmallerThanZero = timer.ReturnIsMinumumDistanceTimerSmallerZero();
+        isMinumumDistanceTimerGreaterThanZero = timer.ReturnIsMinumumDistanceTimerGreaterZero();
         MoveEnemyOpposite();
-        EnemyRotationWhenRayHitsPlayer();
+        DefineRotation();
+        RotateEnemyWhenSeePlayer();
     }
 
     float ReturnDistance()
@@ -78,8 +86,7 @@ public class PathFinding : MonoBehaviour
     void CalculateAndReturnBooleanFromDistance()
     {
 
-        if (enemyAndPlayerDistance <= maximumDistance && enemyAndPlayerDistance > minimumDistance
-        && isMinumumDistanceTimerSmallerThanZero)
+        if (enemyAndPlayerDistance <= maximumDistance && enemyAndPlayerDistance > minimumDistance)
         {
             isPlayerInMinumumDistance = false;
             isPlayerInMaximumDistance = true;
@@ -104,8 +111,7 @@ public class PathFinding : MonoBehaviour
 
     void MoveToPlayer()
     {
-
-        if (isPlayerInMaximumDistance)
+        if (isPlayerInMaximumDistance && isMinumumDistanceTimerSmallerThanZero)
         {
             MoveEnemy(newPlayerPosition);
         }
@@ -142,25 +148,31 @@ public class PathFinding : MonoBehaviour
 
     void MoveEnemyOpposite()
     {
-        if (isPlayerInMinumumDistance && isLeftLayerPlayer)
+        if (isPlayerInMinumumDistance && isLeftLayerPlayer || isMinumumDistanceTimerGreaterThanZero)
             MoveEnemy((Vector2)transformForMove.position + moveRight);
-        else if (isPlayerInMinumumDistance && isRightLayerPlayer)
+        else if (isPlayerInMinumumDistance && isRightLayerPlayer || isMinumumDistanceTimerGreaterThanZero)
             MoveEnemy((Vector2)transformForMove.position + moveLeft);
     }
 
-    void EnemyRotationWhenRayHitsPlayer()
+    void DefineRotation()
     {
         if (isLeftLayerPlayer)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
+            isEnemySeeRight = false;
         else if (isRightLayerPlayer)
+            isEnemySeeRight = true;
+    }
+
+    void RotateEnemyWhenSeePlayer()
+    {
+        if (isEnemySeeRight)
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
+        else if (!isEnemySeeRight)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
     }
-
-
 
 
 
