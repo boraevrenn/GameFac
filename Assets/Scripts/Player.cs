@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using Unity.Collections;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ public class Player : MonoBehaviour
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
-    [SerializeField] Attack attack;
 
 
     [Header("Adjustable Values")]
@@ -16,11 +16,8 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpSpeed = 500;
 
 
-    [Header("Animation Values")]
-
 
     float rotationChangeValue = 1;
-    float rotationValue = 180;
 
 
 
@@ -40,13 +37,11 @@ public class Player : MonoBehaviour
         Move();
         Jump();
         Rotate();
-        attack.ApplyAttack();
     }
     public void PlayAnimations()
     {
         MoveAnimation();
         JumpAnimation();
-        SwordAnimation();
     }
 
 
@@ -73,9 +68,9 @@ public class Player : MonoBehaviour
         if (Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon)
         {
             if (playerRigidbody.velocity.x < -rotationChangeValue)
-                transform.rotation = Quaternion.Euler(transform.rotation.x, rotationValue, transform.rotation.z);
+                transform.localScale = new Vector3(-1, 1, 1);
             else if (playerRigidbody.velocity.x > rotationChangeValue)
-                transform.rotation = Quaternion.Euler(transform.rotation.x, rotationValue - rotationValue, transform.rotation.z);
+                transform.localScale = new Vector3(1, 1, 1);
         }
     }
 
@@ -96,14 +91,6 @@ public class Player : MonoBehaviour
             playerAnimator.SetBool("isJump", true);
         else if (playerRigidbody.IsTouchingLayers(LayerMask.GetMask("Ground")))
             playerAnimator.SetBool("isJump", false);
-    }
-
-    void SwordAnimation()
-    {
-        if (Input.GetMouseButton(0) && attack.attackTimer >= attack.attackTimerTotal)
-        {
-            playerAnimator.SetTrigger("Attack");
-        }
     }
 }
 

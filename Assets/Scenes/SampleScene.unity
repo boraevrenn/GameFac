@@ -390,7 +390,7 @@ Transform:
   m_GameObject: {fileID: 647889708}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.03, y: 0.02, z: 0}
+  m_LocalPosition: {x: -3.86, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -470,11 +470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db5fc981c93669346bb856f24969b880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 0
-  attackTimer: 0
-  attackTimerTotal: 1
-  radius: 0.55
-  attackArea: {x: 0.15, y: 0.17}
 --- !u!114 &647889714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -507,21 +502,22 @@ MonoBehaviour:
   playerRigidbody: {fileID: 957101368}
   timer: {fileID: 647889716}
   enemyRigidbody: {fileID: 647889711}
+  patrol: {fileID: 647889717}
   newPlayerPosition: {x: 0, y: 0}
   isLeftLayerPlayer: 0
   isRightLayerPlayer: 0
   enemySpeed: 2
   isEnemySeeRight: 0
   isPlayerInMaximumDistance: 0
-  isPlayerInMinumumDistance: 0
+  isPlayerInMinimumDistance: 0
   enemyAndPlayerDistance: 0
   maximumDistance: 5
   minimumDistance: 0.7
   extendRayCastLeft: {x: -0.5, y: 0}
   extendRayCastRight: {x: 0.5, y: 0}
   rayDistance: 4
-  isMinumumDistanceTimerSmallerThanZero: 0
-  isMinumumDistanceTimerGreaterThanZero: 0
+  isMinimumDistanceTimerSmallerThanZero: 0
+  isMinimumDistanceTimerGreaterThanZero: 0
 --- !u!114 &647889716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,8 +531,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pathFinding: {fileID: 647889715}
-  waitMinumumDistanceTimer: 0
+  patrol: {fileID: 647889717}
+  waitMinimumDistanceTimer: 0
   waitMinimumDistanceTotalTime: 0.5
+  startPatrolTimer: 0
+  startPatrolTimerTotal: 1
+  workForOneTime: 0
+  enemyDirectionTimer: 0
+  enemyDirectionTimerTotal: 1.5
 --- !u!114 &647889717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -549,6 +551,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adcc308f53a6ea64093dd19cf78f1928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pathfinding: {fileID: 647889715}
+  timer: {fileID: 647889716}
+  isPatrolModeEnabled: 0
+  enemyTransform: {fileID: 647889710}
+  moveRightAndLeft: {x: 1, y: 0}
+  changeMovementAndRotationDirection: 0
+  addToRotationAndMovementTimer: 0.0001
+  rotationX: 1
 --- !u!1 &784995237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,7 +1192,7 @@ Transform:
   m_GameObject: {fileID: 957101366}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.33, y: -0.2, z: 0}
+  m_LocalPosition: {x: 7.42, y: -0.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1202,7 +1212,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerRigidbody: {fileID: 957101368}
   playerAnimator: {fileID: 957101371}
-  attack: {fileID: 957101373}
   moveSpeed: 500
   jumpSpeed: 600
 --- !u!95 &957101371
@@ -1290,11 +1299,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db5fc981c93669346bb856f24969b880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPlayer: 1
-  attackTimer: 0
-  attackTimerTotal: 0.5
-  radius: 0.55
-  attackArea: {x: 0.3, y: 0}
 --- !u!61 &957101374
 BoxCollider2D:
   m_ObjectHideFlags: 0
