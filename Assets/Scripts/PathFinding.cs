@@ -176,12 +176,4 @@ public class PathFinding : MonoBehaviour
             }
         }
     }
-
-
-
-    void OnDrawGizmos()
-    {
-        Debug.DrawRay(transform.position, Vector2.left, Color.black);
-        Debug.DrawRay(transform.position, Vector2.right, Color.red);
-    }
 }

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using System.Linq;
 using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,6 +16,17 @@ public class Player : MonoBehaviour
     [Header("Adjustable Values")]
     [SerializeField] float moveSpeed = 500;
     [SerializeField] float jumpSpeed = 500;
+    public float health;
+
+
+    [Header("Attack Values")]
+    [SerializeField] Vector2 extendAttackRadiusRight;
+    [SerializeField] Vector2 extendAttackRadiusLeft;
+    [SerializeField] float radius;
+    [SerializeField] float attackDamage;
+    [SerializeField] float attackTimer;
+    [SerializeField] float attackTimerTotal;
+
 
 
 
@@ -23,12 +36,15 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+ 
         PlayAnimations();
     }
 
     void FixedUpdate()
     {
+
         PlayerMovement();
+
     }
 
 
@@ -37,11 +53,14 @@ public class Player : MonoBehaviour
         Move();
         Jump();
         Rotate();
+        PlayerAttack();
+
     }
     public void PlayAnimations()
     {
         MoveAnimation();
         JumpAnimation();
+        AttackAnimation();
     }
 
 
@@ -92,6 +111,61 @@ public class Player : MonoBehaviour
         else if (playerRigidbody.IsTouchingLayers(LayerMask.GetMask("Ground")))
             playerAnimator.SetBool("isJump", false);
     }
+
+
+    void PlayerAttack()
+    {
+        attackTimer -= Time.deltaTime;
+        if (Input.GetMouseButton(0) && attackTimer <= Mathf.Epsilon)
+        {
+
+            attackTimer = attackTimerTotal;
+            List<Collider2D> attackObjectList = new List<Collider2D>();
+            GameObject currentAttackedObject = null;
+            if (transform.localScale.x == 1)
+            {
+                attackObjectList = Physics2D.OverlapCircleAll((Vector2)transform.position + extendAttackRadiusRight, radius).ToList();
+            }
+            else if (transform.localScale.x == -1)
+            {
+                attackObjectList = Physics2D.OverlapCircleAll((Vector2)transform.position + extendAttackRadiusLeft, radius).ToList();
+            }
+
+
+            if (attackObjectList.Count > 0)
+            {
+                foreach (Collider2D damagedObject in attackObjectList)
+                {
+                    if (LayerMask.LayerToName(damagedObject.gameObject.layer) == "Enemy")
+                    {
+                        currentAttackedObject = damagedObject.gameObject;
+                    }
+                }
+            }
+
+            if (currentAttackedObject != null)
+            {
+                Enemy enemy = currentAttackedObject.GetComponent<Enemy>();
+                enemy.health -= attackDamage;
+                if (enemy.health <= 0)
+                {
+                    Destroy(enemy.gameObject);
+                }
+            }
+        }
+    }
+    void AttackAnimation()
+    {
+        if(Input.GetMouseButton(0) && attackTimer <= Mathf.Epsilon )
+        {
+            playerAnimator.SetTrigger("Attack");
+        }
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere((Vector2)transform.position + extendAttackRadiusLeft, radius);
+        Gizmos.DrawWireSphere((Vector2)transform.position + extendAttackRadiusRight, radius);
+    }
 }
-
-
