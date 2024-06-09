@@ -9,7 +9,7 @@ public class Patrol : MonoBehaviour
     [Header("Componenets")]
     [SerializeField] PathFinding pathfinding;
     [SerializeField] Timer timer;
-
+    [SerializeField] GameManager gameManager;
     [Header("Patrol Values")]
     public bool isPatrolModeEnabled;
     float patrolTimer;
@@ -24,13 +24,16 @@ public class Patrol : MonoBehaviour
 
     void FixedUpdate()
     {
-        patrolTimer = timer.startPatrolTimer;
-        DefinePatrol();
-        StartPatrol();
-        changeDirectionTimer = timer.enemyDirectionTimer;
-        DefineMovementAndRotationDirection();
-        ChangeMovementDirection();
-        ChangeRotation();
+        if(!gameManager.enterEditMode && !gameManager.gameOver)
+        {
+            patrolTimer = timer.startPatrolTimer;
+            DefinePatrol();
+            StartPatrol();
+            changeDirectionTimer = timer.enemyDirectionTimer;
+            DefineMovementAndRotationDirection();
+            ChangeMovementDirection();
+            ChangeRotation();
+        }
     }
 
 

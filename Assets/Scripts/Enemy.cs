@@ -7,21 +7,28 @@ using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Components")]
     [SerializeField] Animator enemyAnimator;
-    public float health;
+    [SerializeField] PathFinding pathfinding;
+    [SerializeField] GameManager gameManager;
+
+    [Header("Attack Values")]
     [SerializeField] Vector2 extendAttackRadiusRight;
     [SerializeField] Vector2 extendAttackRadiusLeft;
     [SerializeField] float radius;
     [SerializeField] float attackTimer;
     [SerializeField] float attackTimerTotal;
     [SerializeField] float attackDamage;
-    [SerializeField] PathFinding pathfinding;
-
-
+    [SerializeField] float destroyTime;
+    public float health;
 
     private void FixedUpdate()
     {
-        EnemyAttack();
+        if(!gameManager.enterEditMode && !gameManager.gameOver)
+        {
+            EnemyAttack();
+        }
+    
     }
 
 
@@ -60,7 +67,7 @@ public class Enemy : MonoBehaviour
                 player.health -= attackDamage;
                 if (player.health <= 0)
                 {
-                    Destroy(player.gameObject);
+                    Destroy(player.gameObject,destroyTime);
                 }
             }
         }

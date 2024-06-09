@@ -19,7 +19,7 @@ public class PathFinding : MonoBehaviour
     [SerializeField] Timer timer;
     [SerializeField] Rigidbody2D enemyRigidbody;
     [SerializeField] Patrol patrol;
-
+    [SerializeField] GameManager gameManager;
 
 
     [Header("Player Values")]
@@ -65,17 +65,20 @@ public class PathFinding : MonoBehaviour
 
     void FixedUpdate()
     {
-        newPlayerPosition = new Vector2(player.transform.position.x, enemyRigidbody.velocity.y);
-        enemyAndPlayerDistance = ReturnDistance();
-        CalculateAndReturnBooleanFromDistance();
-        MoveToPlayer();
-        CreateRayForEnemy();
-        DefineEnemyDirection();
-        isMinimumDistanceTimerSmallerThanZero = timer.ReturnIsMinimumDistanceTimerSmallerZero();
-        isMinimumDistanceTimerGreaterThanZero = timer.ReturnIsMinimumDistanceTimerGreaterZero();
-        MoveEnemyOpposite();
-        DefineRotation();
-        RotateEnemyWhenSeePlayer();
+        if (!gameManager.enterEditMode && !gameManager.gameOver)
+        {
+            newPlayerPosition = new Vector2(player.transform.position.x, enemyRigidbody.velocity.y);
+            enemyAndPlayerDistance = ReturnDistance();
+            CalculateAndReturnBooleanFromDistance();
+            MoveToPlayer();
+            CreateRayForEnemy();
+            DefineEnemyDirection();
+            isMinimumDistanceTimerSmallerThanZero = timer.ReturnIsMinimumDistanceTimerSmallerZero();
+            isMinimumDistanceTimerGreaterThanZero = timer.ReturnIsMinimumDistanceTimerGreaterZero();
+            MoveEnemyOpposite();
+            DefineRotation();
+            RotateEnemyWhenSeePlayer();
+        }
     }
 
     float ReturnDistance()

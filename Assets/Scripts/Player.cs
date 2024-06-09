@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] GameManager gameManager;
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] float moveSpeed = 500;
     [SerializeField] float jumpSpeed = 500;
     public float health;
-
+    [SerializeField] float destroyTime;
 
     [Header("Attack Values")]
     [SerializeField] Vector2 extendAttackRadiusRight;
@@ -30,21 +31,27 @@ public class Player : MonoBehaviour
 
 
 
+
     float rotationChangeValue = 1;
 
 
 
     void Update()
     {
- 
-        PlayAnimations();
+        if (!gameManager.enterEditMode && !gameManager.gameOver)
+        {
+            PlayAnimations();
+        }
+        PlayerDeathAnimation();
+
     }
 
     void FixedUpdate()
     {
-
-        PlayerMovement();
-
+       if (!gameManager.enterEditMode && !gameManager.gameOver)
+        {
+            PlayerMovement();
+        }
     }
 
 
@@ -61,6 +68,7 @@ public class Player : MonoBehaviour
         MoveAnimation();
         JumpAnimation();
         AttackAnimation();
+
     }
 
 
@@ -156,12 +164,20 @@ public class Player : MonoBehaviour
     }
     void AttackAnimation()
     {
-        if(Input.GetMouseButton(0) && attackTimer <= Mathf.Epsilon )
+        if (Input.GetMouseButton(0) && attackTimer <= Mathf.Epsilon)
         {
             playerAnimator.SetTrigger("Attack");
         }
     }
 
+
+    void PlayerDeathAnimation()
+    {
+        if(health <= Mathf.Epsilon)
+        {
+            playerAnimator.SetTrigger("Dead");
+        }
+    }
 
     private void OnDrawGizmos()
     {

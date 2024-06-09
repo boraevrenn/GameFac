@@ -10,6 +10,7 @@ public class Timer : MonoBehaviour
     [SerializeField] PathFinding pathFinding;
     [SerializeField] Patrol patrol;
     [SerializeField] bool isEnemy;
+    [SerializeField] GameManager gameManager;
     [Header("Player In Minimum Distance Run Timer Values")]
     [SerializeField] float waitMinimumDistanceTimer;
     [SerializeField] float waitMinimumDistanceTotalTime;
@@ -28,13 +29,15 @@ public class Timer : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isEnemy)
+        if(!gameManager.enterEditMode && !gameManager.gameOver)  
         {
-            waitForReturnEnemyToMinimumDistance();
-            StartPatrolTimer();
-            ChangeMovementAndRotationDirectionTimer();    
+            if (isEnemy)
+            {
+                waitForReturnEnemyToMinimumDistance();
+                StartPatrolTimer();
+                ChangeMovementAndRotationDirectionTimer();
+            }
         }
-     
     }
 
     //Walk To Maximum Distance Timer
