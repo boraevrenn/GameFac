@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
-
+    [SerializeField] BoxCollider2D boxCollider;
 
     [Header("Adjustable Values")]
     [SerializeField] float moveSpeed = 500;
@@ -48,10 +48,15 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-       if (!gameManager.enterEditMode && !gameManager.gameOver)
+        if (!gameManager.enterEditMode && !gameManager.gameOver)
         {
             PlayerMovement();
         }
+    }
+
+    private void LateUpdate()
+    {
+        CameraFollow();
     }
 
 
@@ -83,7 +88,7 @@ public class Player : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && playerRigidbody.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (Input.GetKey(KeyCode.Space) && boxCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
         {
             Vector2 jump = new Vector2(playerRigidbody.velocity.x, jumpSpeed * Time.deltaTime);
             playerRigidbody.velocity = jump;
@@ -153,14 +158,23 @@ public class Player : MonoBehaviour
 
             if (currentAttackedObject != null)
             {
+
                 Enemy enemy = currentAttackedObject.GetComponent<Enemy>();
+                enemy.GetComponent<Animator>().SetTrigger("Hurt");
                 enemy.health -= attackDamage;
                 if (enemy.health <= 0)
                 {
-                    Destroy(enemy.gameObject);
+                    Destroy(enemy.gameObject, destroyTime);
+
                 }
             }
         }
+    }
+
+
+    void CameraFollow()
+    {
+        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
     }
     void AttackAnimation()
     {
@@ -173,15 +187,10 @@ public class Player : MonoBehaviour
 
     void PlayerDeathAnimation()
     {
-        if(health <= Mathf.Epsilon)
+        if (health <= Mathf.Epsilon)
         {
             playerAnimator.SetTrigger("Dead");
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere((Vector2)transform.position + extendAttackRadiusLeft, radius);
-        Gizmos.DrawWireSphere((Vector2)transform.position + extendAttackRadiusRight, radius);
-    }
 }

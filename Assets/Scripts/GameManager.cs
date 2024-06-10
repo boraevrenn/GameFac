@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] public bool enterEditMode;
     [SerializeField] Player player;
     public bool gameOver;
-
+    [Header("Background")]
+    [SerializeField] Material editBackgroundMaterial;
+    [SerializeField] float backgroundSpeed;
 
     private void Awake()
     {
@@ -17,6 +19,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
+        ParallaxEffect();
         EnterEditMode();
         GameOver();
     }
@@ -60,5 +63,13 @@ public class GameManager : MonoBehaviour
             }
         }
      
+    }
+    
+    void ParallaxEffect()
+    {
+        if(!gameOver)
+        {
+            editBackgroundMaterial.mainTextureOffset += new Vector2(backgroundSpeed * Time.deltaTime, 0);
+        }
     }
 }

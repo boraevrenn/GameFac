@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] Animator enemyAnimator;
     [SerializeField] PathFinding pathfinding;
     [SerializeField] GameManager gameManager;
+    [SerializeField] Patrol patrol;
 
     [Header("Attack Values")]
     [SerializeField] Vector2 extendAttackRadiusRight;
@@ -22,11 +23,21 @@ public class Enemy : MonoBehaviour
     [SerializeField] float destroyTime;
     public float health;
 
+    private void Update()
+    {
+        if (!gameManager.enterEditMode && !gameManager.gameOver)
+        {
+            WalkAnimation();
+            EnemyDeathAnimation();
+        }
+    }
+
     private void FixedUpdate()
     {
         if(!gameManager.enterEditMode && !gameManager.gameOver)
         {
-            EnemyAttack();
+            EnemyAttack(); 
+       
         }
     
     }
@@ -37,6 +48,7 @@ public class Enemy : MonoBehaviour
         attackTimer -= Time.deltaTime;
         if (attackTimer <= Mathf.Epsilon && (pathfinding.isPlayerInMinimumDistance || pathfinding.isPlayerInMaximumDistance))
         {
+            enemyAnimator.SetTrigger("Attack");
             attackTimer = attackTimerTotal;
             List<Collider2D> attackObjectList = new List<Collider2D>();
             GameObject currentAttackedObject = null;
@@ -72,12 +84,30 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    void AttackAnimation()
+
+    void EnemyDeathAnimation()
     {
-        if (attackTimer <= Mathf.Epsilon)
+        if (health <= Mathf.Epsilon)
         {
-            enemyAnimator.SetTrigger("Attack");
+            enemyAnimator.SetTrigger("Dead");
         }
     }
+
+    void WalkAnimation()
+    {
+        if(patrol.isPatrolModeEnabled || pathfinding.isPlayerInMaximumDistance)
+        {
+            enemyAnimator.SetBool("isWalk", true);
+        }
+        else if(pathfinding.isPlayerInMinimumDistance)
+        {
+            enemyAnimator.SetBool("isWalk", false);
+        }
+        else
+        {
+            enemyAnimator.SetBool("isWalk", false);
+        }
+    }
+
 
 }
