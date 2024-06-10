@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] PathFinding pathfinding;
     [SerializeField] GameManager gameManager;
     [SerializeField] Patrol patrol;
+    [HideInInspector]public Slider enemyHealthSlider;
 
     [Header("Attack Values")]
     [SerializeField] Vector2 extendAttackRadiusRight;
@@ -34,12 +35,12 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!gameManager.enterEditMode && !gameManager.gameOver)
+        if (!gameManager.enterEditMode && !gameManager.gameOver)
         {
-            EnemyAttack(); 
-       
+            EnemyAttack();
+
         }
-    
+
     }
 
 
@@ -79,7 +80,7 @@ public class Enemy : MonoBehaviour
                 player.health -= attackDamage;
                 if (player.health <= 0)
                 {
-                    Destroy(player.gameObject,destroyTime);
+                    Destroy(player.gameObject, destroyTime);
                 }
             }
         }
@@ -95,11 +96,11 @@ public class Enemy : MonoBehaviour
 
     void WalkAnimation()
     {
-        if(patrol.isPatrolModeEnabled || pathfinding.isPlayerInMaximumDistance)
+        if (patrol.isPatrolModeEnabled || pathfinding.isPlayerInMaximumDistance)
         {
             enemyAnimator.SetBool("isWalk", true);
         }
-        else if(pathfinding.isPlayerInMinimumDistance)
+        else if (pathfinding.isPlayerInMinimumDistance)
         {
             enemyAnimator.SetBool("isWalk", false);
         }

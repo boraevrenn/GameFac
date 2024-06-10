@@ -5,10 +5,13 @@ using System.Linq;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
+    [SerializeField] AudioManager audioManager;
+    public Slider playerHealthSlider;
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
@@ -131,8 +134,8 @@ public class Player : MonoBehaviour
         attackTimer -= Time.deltaTime;
         if (Input.GetMouseButton(0) && attackTimer <= Mathf.Epsilon)
         {
-
             attackTimer = attackTimerTotal;
+            audioManager.PlaySwordSound();
             List<Collider2D> attackObjectList = new List<Collider2D>();
             GameObject currentAttackedObject = null;
             if (transform.localScale.x == 1)
@@ -160,7 +163,8 @@ public class Player : MonoBehaviour
             {
 
                 Enemy enemy = currentAttackedObject.GetComponent<Enemy>();
-                enemy.GetComponent<Animator>().SetTrigger("Hurt");
+                Animator enemyAnimator = enemy.GetComponent<Animator>();
+                enemyAnimator.SetTrigger("Hurt");
                 enemy.health -= attackDamage;
                 if (enemy.health <= 0)
                 {
