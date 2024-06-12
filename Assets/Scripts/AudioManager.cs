@@ -16,10 +16,14 @@ public class AudioManager : MonoBehaviour
     {
         if (player == null)
         {
-            player = FindObjectOfType<Player>();
-            playerRigidbody = player.GetComponent<Rigidbody2D>();
+            if (FindObjectsOfType<Player>().Length > 0)
+            {
+                player = FindObjectOfType<Player>();
+                playerRigidbody = player.GetComponent<Rigidbody2D>();
+            }
+
         }
-        if(audioSource == null)
+        if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
         }
@@ -27,6 +31,15 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
+        if (player == null)
+        {
+            if(FindObjectsOfType<Player>().Length > 0)
+            {
+                player = FindObjectOfType<Player>();
+                playerRigidbody = player.GetComponent<Rigidbody2D>();
+            }
+     
+        }
         PlayerWalkSound();
     }
 

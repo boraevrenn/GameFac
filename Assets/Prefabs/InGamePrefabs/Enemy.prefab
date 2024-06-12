@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 6676570364430966336}
   m_Layer: 6
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,7 +74,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathFinding: {fileID: 0}
   patrol: {fileID: 0}
-  isEnemy: 1
   gameManager: {fileID: 0}
   waitMinimumDistanceTimer: 0
   waitMinimumDistanceTotalTime: 0.5
@@ -135,7 +134,7 @@ MonoBehaviour:
   pathfinding: {fileID: 0}
   gameManager: {fileID: 0}
   patrol: {fileID: 0}
-  enemyCanvas: {fileID: 0}
+  enemyHealthCanvas: {fileID: 0}
   extendAttackRadiusRight: {x: 0.27, y: 0}
   extendAttackRadiusLeft: {x: -0.27, y: 0}
   radius: 0.4

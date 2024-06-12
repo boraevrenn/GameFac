@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 2307803089920809628}
   m_Layer: 7
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
   audioManager: {fileID: 0}
-  playerCanvas: {fileID: 0}
+  playerHealthCanvas: {fileID: 0}
   playerRigidbody: {fileID: 0}
   playerAnimator: {fileID: 0}
   boxCollider: {fileID: 0}

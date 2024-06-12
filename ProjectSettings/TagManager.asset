@@ -7,6 +7,9 @@ TagManager:
   - Preview
   - Environment
   - Ground
+  - PlayerSprite
+  - EnemySprite
+  - Enemy
   layers:
   - Default
   - TransparentFX

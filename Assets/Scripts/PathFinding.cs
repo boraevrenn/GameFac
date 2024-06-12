@@ -64,31 +64,47 @@ public class PathFinding : MonoBehaviour
     {
         if (player == null)
         {
-            player = FindObjectOfType<Player>();
-            playerRigidbody = player.GetComponent<Rigidbody2D>();
+            if (FindObjectsOfType<Player>().Length > 0)
+            {
+                player = FindObjectOfType<Player>();
+                playerRigidbody = player.GetComponent<Rigidbody2D>();
+            }
         }
-       
+
         if (timer == null)
             timer = GetComponent<Timer>();
-        
-        if(enemyRigidbody == null)
+
+        if (enemyRigidbody == null)
             enemyRigidbody = GetComponent<Rigidbody2D>();
-        
-        if(patrol == null)
+
+        if (patrol == null)
             patrol = GetComponent<Patrol>();
-        
-        if(gameManager == null)
+
+        if (gameManager == null)
             gameManager = FindObjectOfType<GameManager>();
-        
+
         transformForMove = transform;
     }
-
+    private void Update()
+    {
+        if (player == null)
+        {
+            if (FindObjectsOfType<Player>().Length > 0)
+            {
+                player = FindObjectOfType<Player>();
+                playerRigidbody = player.GetComponent<Rigidbody2D>();
+            }
+        }
+    }
 
     void FixedUpdate()
     {
         if (!gameManager.enterEditMode && !gameManager.gameOver)
         {
-            newPlayerPosition = new Vector2(player.transform.position.x, enemyRigidbody.velocity.y);
+            if (player != null)
+            {
+                newPlayerPosition = new Vector2(player.transform.position.x, enemyRigidbody.velocity.y);
+            }
             enemyAndPlayerDistance = ReturnDistance();
             CalculateAndReturnBooleanFromDistance();
             MoveToPlayer();
@@ -104,7 +120,9 @@ public class PathFinding : MonoBehaviour
 
     float ReturnDistance()
     {
-        return Vector2.Distance(transform.position, player.transform.position);
+        if (player != null)
+            return Vector2.Distance(transform.position, player.transform.position);
+        return 10;
     }
 
     void CalculateAndReturnBooleanFromDistance()
