@@ -9,7 +9,6 @@ public class PrefabCreator : MonoBehaviour
     [Header("Components")]
     [SerializeField] GameObject player;
     [SerializeField] GameObject enemy;
-    [SerializeField] Hud hud;
     [Header("Bool Values")]
     [SerializeField] bool isCreateEnemy;
     [SerializeField] bool isCreatePlayer;
