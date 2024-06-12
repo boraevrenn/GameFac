@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        if(player == null)
+            player = FindObjectOfType<Player>();
         GameManagerSingleton();
     }
     private void Update()

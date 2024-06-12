@@ -1,48 +1,106 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Hud : MonoBehaviour
 {
-    [SerializeField] Slider playerHealthSlider;
-    [SerializeField] Slider enemyHealthSlider;
+    [SerializeField] GameObject healthPrefab;
     [SerializeField] Player player;
-    [SerializeField] Enemy enemy;
-    [SerializeField] Canvas playerCanvas;
-    [SerializeField] Canvas enemyCanvas;
+    [SerializeField] List<Enemy> enemies;
+    [SerializeField] Vector2 extendHealthBars;
+
+    private void Awake()
+    {
+        if (player == null)
+            player = FindObjectOfType<Player>();
+            player.playerHealthCanvas = Instantiate(healthPrefab, (Vector2)player.transform.position + extendHealthBars, Quaternion.identity, transform);
+
+
+
+    }
 
     private void Update()
     {
-        UpdatePlayerHealth();
-        UpdateEnemyHealth();
-
+        FollowObjects();
+        UpdateHealthBars();
+        IfNullDestroyHealthBars();
+        AllEnemyMethods();
     }
-    private void LateUpdate()
-    {
-        DontUpdateSliderRotation();
-    }
-
-    void UpdatePlayerHealth()
+    void FollowObjects()
     {
         if (player != null)
-            playerHealthSlider.value = player.health;
+            player.playerHealthCanvas.transform.position = (Vector2)player.transform.position + extendHealthBars;
+    }
+
+    void IfNullDestroyHealthBars()
+    {
+        if (player == null)
+        {
+            DestroyImmediate(player.playerHealthCanvas, true);
+        }
+    }
+
+    void UpdateHealthBars()
+    {
+        if (player != null)
+            player.playerHealthCanvas.gameObject.GetComponentInChildren<Slider>().value = player.health;
+    }
+
+    void UpdateEnemies()
+    {
+        enemies = FindObjectsOfType<Enemy>().ToList();
+    }
+
+    void AddCanvasToEnemies()
+    {
+        if(enemies.Count > 0)
+        {
+            foreach(Enemy enemy in enemies)
+            {
+                if(enemy.enemyHealthCanvas == null)
+                {
+                    enemy.enemyHealthCanvas = Instantiate(healthPrefab, (Vector2)enemy.transform.position + extendHealthBars, Quaternion.identity, transform);
+                    enemy.enemyHealthCanvas.GetComponentInChildren<Slider>().maxValue = enemy.health;
+                }
+            }
+        }
+    }
+
+    void FollowEnemyPosition()
+    {
+        if(enemies.Count > 0)
+        {
+            foreach(Enemy enemy in enemies)
+            {
+                if(enemy.enemyHealthCanvas != null)
+                {
+                    enemy.enemyHealthCanvas.transform.position = (Vector2)enemy.transform.position + extendHealthBars;
+                }
+            }
+        }
     }
 
     void UpdateEnemyHealth()
     {
-        if (enemy != null)
-            enemyHealthSlider.value = enemy.health;
+        if(enemies.Count > 0)
+        {
+            foreach(Enemy enemy in enemies)
+            {
+                if(enemy.enemyHealthCanvas != null)
+                {
+                    enemy.enemyHealthCanvas.GetComponentInChildren<Slider>().value = enemy.health;
+                }
+            }
+        }
     }
 
-    void DontUpdateSliderRotation()
+    void AllEnemyMethods()
     {
-        if (player != null)  
-        
-        if (enemy != null)
-            enemyHealthSlider.transform.localRotation = Quaternion.identity;
+        UpdateEnemies();
+        AddCanvasToEnemies();
+        FollowEnemyPosition();
+        UpdateEnemyHealth();
     }
-
-
-
 }

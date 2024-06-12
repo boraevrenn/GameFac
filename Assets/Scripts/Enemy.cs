@@ -12,7 +12,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] PathFinding pathfinding;
     [SerializeField] GameManager gameManager;
     [SerializeField] Patrol patrol;
-    [HideInInspector]public Slider enemyHealthSlider;
+    public GameObject enemyHealthCanvas;
+
 
     [Header("Attack Values")]
     [SerializeField] Vector2 extendAttackRadiusRight;
@@ -24,6 +25,18 @@ public class Enemy : MonoBehaviour
     [SerializeField] float destroyTime;
     public float health;
 
+
+    private void Awake()
+    {
+        if(enemyAnimator == null)
+            enemyAnimator = GetComponent<Animator>();
+        if(pathfinding == null)
+            pathfinding = GetComponent<PathFinding>();
+        if(gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        if(patrol == null)
+            patrol = GetComponent<Patrol>();
+    }
     private void Update()
     {
         if (!gameManager.enterEditMode && !gameManager.gameOver)

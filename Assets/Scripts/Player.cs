@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
     [SerializeField] AudioManager audioManager;
-    public Slider playerHealthSlider;
+    public GameObject playerHealthCanvas;
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
@@ -34,9 +34,22 @@ public class Player : MonoBehaviour
 
 
 
-
     float rotationChangeValue = 1;
 
+
+    private void Awake()
+    {
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        if (audioManager == null)
+            audioManager = FindObjectOfType<AudioManager>();
+        if (playerRigidbody == null)
+            playerRigidbody = GetComponent<Rigidbody2D>();
+        if (playerAnimator == null)
+            playerAnimator = GetComponent<Animator>();
+        if (boxCollider == null)
+            boxCollider = GetComponent<BoxCollider2D>();
+    }
 
 
     void Update()

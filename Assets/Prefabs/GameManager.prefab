@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enterEditMode: 0
-  player: {fileID: 3058229396385038015, guid: b101c401d4536e640a4fb78774695c66, type: 3}
+  player: {fileID: 0}
   gameOver: 0
   editBackgroundMaterial: {fileID: 2100000, guid: 0bf6d383c7c3d8c4dbb680dcc3b0e29c, type: 2}
   backgroundSpeed: 0.04

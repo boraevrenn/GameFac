@@ -60,7 +60,28 @@ public class PathFinding : MonoBehaviour
     [SerializeField] bool isMinimumDistanceTimerSmallerThanZero;
     [SerializeField] bool isMinimumDistanceTimerGreaterThanZero;
 
-
+    private void Awake()
+    {
+        if (player == null)
+        {
+            player = FindObjectOfType<Player>();
+            playerRigidbody = player.GetComponent<Rigidbody2D>();
+        }
+       
+        if (timer == null)
+            timer = GetComponent<Timer>();
+        
+        if(enemyRigidbody == null)
+            enemyRigidbody = GetComponent<Rigidbody2D>();
+        
+        if(patrol == null)
+            patrol = GetComponent<Patrol>();
+        
+        if(gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+        
+        transformForMove = transform;
+    }
 
 
     void FixedUpdate()

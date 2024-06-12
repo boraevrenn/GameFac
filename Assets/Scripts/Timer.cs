@@ -7,9 +7,9 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
+    [Header("Components")]
     [SerializeField] PathFinding pathFinding;
     [SerializeField] Patrol patrol;
-    [SerializeField] bool isEnemy;
     [SerializeField] GameManager gameManager;
     [Header("Player In Minimum Distance Run Timer Values")]
     [SerializeField] float waitMinimumDistanceTimer;
@@ -26,17 +26,23 @@ public class Timer : MonoBehaviour
     [SerializeField] float enemyDirectionTimerTotal;
 
 
+    private void Awake()
+    {
+        if (pathFinding == null)
+            pathFinding = GetComponent<PathFinding>();
+        if (patrol == null)
+            patrol = GetComponent<Patrol>();
+        if (gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+    }
 
     void FixedUpdate()
     {
-        if(!gameManager.enterEditMode && !gameManager.gameOver)  
+        if (!gameManager.enterEditMode && !gameManager.gameOver)
         {
-            if (isEnemy)
-            {
-                waitForReturnEnemyToMinimumDistance();
-                StartPatrolTimer();
-                ChangeMovementAndRotationDirectionTimer();
-            }
+            waitForReturnEnemyToMinimumDistance();
+            StartPatrolTimer();
+            ChangeMovementAndRotationDirectionTimer();
         }
     }
 

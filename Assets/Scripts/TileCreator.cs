@@ -1,83 +1,142 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class TileCreator : MonoBehaviour
 {
-    [Header("Tilemaps and Tiles")]
-    [SerializeField] Tilemap previewTilemap;
-    [SerializeField] Tilemap groundTilemap;
-    [SerializeField] Tile[] tiles;
+    [Header("Values")]
+    [SerializeField] int buttonNumber = 8;
+    [SerializeField] bool isEnvironmentTile;
+    [SerializeField] bool isButtonClicked;
+    [SerializeField] bool isRemoveTile;
 
-    [Header("Positions")]
-    Vector3 currentVector3Position;
-    Vector3Int currentCellPosition;
-    Vector3Int oldCellPosition;
-    [SerializeField] bool isPreviewTrue;
-    [SerializeField]GameManager gameManager;
 
+    [Header("Tile")]
+    [SerializeField] Tilemap previewTileMap;
+    [SerializeField] Tilemap groundTileMap;
+    [SerializeField] Tilemap environmentTileMap;
+    [SerializeField] Tile[] groundTiles;
+    [SerializeField] Tile[] environmentTiles;
+    [SerializeField] Tile currentTile;
+
+
+
+
+    [Header("Coordinates")]
+    [SerializeField] Vector3 currentPosition;
+    [SerializeField] Vector3Int tilePosition;
+    [SerializeField] Vector3Int previousTile;
+
+    private void Awake()
+    {
+        previewTileMap = GameObject.FindGameObjectWithTag("Preview").ConvertTo<Tilemap>();
+        groundTileMap = GameObject.FindGameObjectWithTag("Ground").ConvertTo<Tilemap>();
+        environmentTileMap = GameObject.FindGameObjectWithTag("Environment").ConvertTo<Tilemap>();
+    }
 
 
 
     private void Update()
     {
-        if (gameManager.enterEditMode)
-        {
-            TakeCoordinates();
-            PreviewTile();
-            PutTile();
-        }
-
+        TakeCoordinates();
+        PreviewTile();
+        PutTile();
+        CancelPuttingTile();
+        RemoveTile();
     }
 
 
-
-    public void MakeisPreviewTrue()
+    public void AssignGroundTilesToButtons()
     {
-        if(isPreviewTrue)
-        {
-            isPreviewTrue = false;
-        }
-        else
-        {
-            isPreviewTrue = true;
-        }
+        string tileIndexString = EventSystem.current.currentSelectedGameObject.name[buttonNumber].ToString();
+        int tileIndexInt = int.Parse(tileIndexString);
+        currentTile = groundTiles[tileIndexInt];
+        isEnvironmentTile = false;
+        isButtonClicked = true;
+        isRemoveTile = false;
     }
 
+    public void AssignEnvironmentTilesToButtons()
+    {
+        string tileIndexString = EventSystem.current.currentSelectedGameObject.name[buttonNumber].ToString();
+        int tileIndexInt = int.Parse(tileIndexString);
+        currentTile = environmentTiles[tileIndexInt];
+        isEnvironmentTile = true;
+        isButtonClicked = true;
+        isRemoveTile = false;
+
+    }
 
     void TakeCoordinates()
     {
-        currentVector3Position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        currentCellPosition = previewTilemap.WorldToCell(currentVector3Position);
-
+        currentPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        tilePosition = previewTileMap.WorldToCell(currentPosition);
     }
 
     void PreviewTile()
     {
-        if (isPreviewTrue)
+        if (isButtonClicked)
         {
-            previewTilemap.SetTile(currentCellPosition, tiles[0]);
-            if (oldCellPosition != currentCellPosition)
+            previewTileMap.SetTile(tilePosition, currentTile);
+            if (previousTile != tilePosition)
             {
-                previewTilemap.SetTile(oldCellPosition, null);
+                previewTileMap.SetTile(previousTile, null);
             }
-            oldCellPosition = currentCellPosition;
+            previousTile = tilePosition;
         }
     }
 
     void PutTile()
     {
-        if (isPreviewTrue && Input.GetMouseButton(0) && !EventSystem.current.currentSelectedGameObject)
+        if (isButtonClicked)
         {
-            groundTilemap.SetTile(currentCellPosition, tiles[0]);
+            if (isEnvironmentTile && Input.GetMouseButton(0) && !EventSystem.current.currentSelectedGameObject)
+            {
+                environmentTileMap.SetTile(tilePosition, currentTile);
+            }
+            else if (!isEnvironmentTile && Input.GetMouseButton(0) && !EventSystem.current.currentSelectedGameObject)
+            {
+                groundTileMap.SetTile(tilePosition, currentTile);
+            }
         }
     }
 
+    void CancelPuttingTile()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            isButtonClicked = false;
+            previewTileMap.SetTile(tilePosition, null);
+        }
+    }
+
+    public void RemoveTileEnabler()
+    {
+        isRemoveTile = !isRemoveTile;
+    }
 
 
-
+    public void RemoveTile()
+    {
+        if (isRemoveTile)
+        {
+            isButtonClicked = false;
+            if (Input.GetMouseButton(0))
+            {
+                groundTileMap.SetTile(tilePosition, null);
+                environmentTileMap.SetTile(tilePosition, null);
+            }
+        }
+        if (Input.GetMouseButton(1))
+        {
+            isRemoveTile = false;
+        }
+    }
 
 }
 

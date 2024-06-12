@@ -141,8 +141,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad0db11029e7ef34ab16ef2b31be7331, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 3058229396385038015, guid: b101c401d4536e640a4fb78774695c66, type: 3}
-  playerRigidbody: {fileID: 7411954181783361822, guid: b101c401d4536e640a4fb78774695c66, type: 3}
-  audioSource: {fileID: 6179526290876607707}
+  player: {fileID: 0}
+  playerRigidbody: {fileID: 0}
+  audioSource: {fileID: 0}
   attackClip: {fileID: 8300000, guid: 7cb347e73509ef34bb2d8758fd168200, type: 3}
   walkClip: {fileID: 8300000, guid: 11356ff3a04c9e34e9a31af20fd61668, type: 3}

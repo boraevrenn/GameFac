@@ -12,6 +12,19 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioClip attackClip;
     [SerializeField] AudioClip walkClip;
 
+    private void Awake()
+    {
+        if (player == null)
+        {
+            player = FindObjectOfType<Player>();
+            playerRigidbody = player.GetComponent<Rigidbody2D>();
+        }
+        if(audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
+    }
+
     private void Update()
     {
         PlayerWalkSound();
@@ -30,6 +43,7 @@ public class AudioManager : MonoBehaviour
     }
     public void PlaySwordSound()
     {
-        audioSource.PlayOneShot(attackClip);    
+        if (player != null)
+            audioSource.PlayOneShot(attackClip);
     }
 }

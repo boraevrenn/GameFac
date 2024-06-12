@@ -22,6 +22,17 @@ public class Patrol : MonoBehaviour
     [SerializeField] float addToRotationAndMovementTimer;
     [SerializeField] float rotationX;
 
+
+    private void Awake()
+    {
+        if(pathfinding == null)
+            pathfinding = GetComponent<PathFinding>();
+        if(timer == null)
+            timer = GetComponent<Timer>();
+        if(gameManager == null)
+            gameManager = FindObjectOfType<GameManager>();
+    }
+
     void FixedUpdate()
     {
         if(!gameManager.enterEditMode && !gameManager.gameOver)
