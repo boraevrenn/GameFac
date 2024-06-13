@@ -10,6 +10,7 @@ TagManager:
   - PlayerSprite
   - EnemySprite
   - Enemy
+  - Panel
   layers:
   - Default
   - TransparentFX

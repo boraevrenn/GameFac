@@ -20,6 +20,7 @@ public class Hud : MonoBehaviour
             {
                 player = FindObjectOfType<Player>();
                 player.playerHealthCanvas = Instantiate(healthPrefab, (Vector2)player.transform.position + extendHealthBars, Quaternion.identity, transform);
+                player.playerHealthCanvas.GetComponentInChildren<Slider>().value = player.health;
             }
         }
     }
@@ -32,6 +33,7 @@ public class Hud : MonoBehaviour
             {
                 player = FindObjectOfType<Player>();
                 player.playerHealthCanvas = Instantiate(healthPrefab, (Vector2)player.transform.position + extendHealthBars, Quaternion.identity, transform);
+                player.playerHealthCanvas.GetComponentInChildren<Slider>().value = player.health;
             }
 
         }

@@ -49,3 +49,4 @@ MonoBehaviour:
   gameOver: 0
   editBackgroundMaterial: {fileID: 2100000, guid: 0bf6d383c7c3d8c4dbb680dcc3b0e29c, type: 2}
   backgroundSpeed: 0.04
+  cameraSpeed: 10

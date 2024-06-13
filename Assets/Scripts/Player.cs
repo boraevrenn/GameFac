@@ -12,14 +12,15 @@ public class Player : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] AudioManager audioManager;
     public GameObject playerHealthCanvas;
+    public GameObject playerInfoCanvas;
     [Header("Player Components")]
     [SerializeField] Rigidbody2D playerRigidbody;
     [SerializeField] Animator playerAnimator;
     [SerializeField] BoxCollider2D boxCollider;
 
     [Header("Adjustable Values")]
-    [SerializeField] float moveSpeed = 500;
-    [SerializeField] float jumpSpeed = 500;
+    public float moveSpeed = 500;
+    public float jumpSpeed = 500;
     public float health;
     [SerializeField] float destroyTime;
 
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] Vector2 extendAttackRadiusRight;
     [SerializeField] Vector2 extendAttackRadiusLeft;
     [SerializeField] float radius;
-    [SerializeField] float attackDamage;
+    public float attackDamage;
     [SerializeField] float attackTimer;
     [SerializeField] float attackTimerTotal;
 
@@ -191,7 +192,11 @@ public class Player : MonoBehaviour
 
     void CameraFollow()
     {
-        Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+        if (!gameManager.enterEditMode)
+        {
+            Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+        }
+
     }
     void AttackAnimation()
     {

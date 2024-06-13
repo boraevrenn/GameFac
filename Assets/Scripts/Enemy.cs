@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] Patrol patrol;
     public GameObject enemyHealthCanvas;
+    public GameObject enemyInfoCanvas;
 
 
     [Header("Attack Values")]
@@ -21,7 +22,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float radius;
     [SerializeField] float attackTimer;
     [SerializeField] float attackTimerTotal;
-    [SerializeField] float attackDamage;
+    public float attackDamage;
     [SerializeField] float destroyTime;
     public float health;
 

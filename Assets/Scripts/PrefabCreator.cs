@@ -9,7 +9,15 @@ public class PrefabCreator : MonoBehaviour
     [Header("Components")]
     [SerializeField] GameObject player;
     [SerializeField] GameObject enemy;
-    [SerializeField] Hud hud;
+    [SerializeField] GameObject playerConfigPrefab;
+    [SerializeField] Transform panelPosition;
+    [SerializeField] GameManager gameManager;
+
+
+
+
+
+    [SerializeField] Player playerC;
     [Header("Bool Values")]
     [SerializeField] bool isCreateEnemy;
     [SerializeField] bool isCreatePlayer;
@@ -25,6 +33,7 @@ public class PrefabCreator : MonoBehaviour
 
     private void Awake()
     {
+        gameManager =FindObjectOfType<GameManager>();
         playerSprite = GameObject.FindGameObjectWithTag("PlayerSprite").ConvertTo<SpriteRenderer>();
         enemySprite = GameObject.FindGameObjectWithTag("EnemySprite").ConvertTo<SpriteRenderer>();
     }
@@ -36,6 +45,7 @@ public class PrefabCreator : MonoBehaviour
         MoveSprite();
         InstantiatePrefab();
         RemovePrefab();
+        OpenClosePlayerConfig();
     }
 
     public void IfButtonClickedCreateEnemy()
@@ -127,37 +137,72 @@ public class PrefabCreator : MonoBehaviour
             {
                 if (Input.GetMouseButtonDown(0) && !EventSystem.current.currentSelectedGameObject)
                 {
-                    Instantiate(player, new Vector3(mousePositionToWorldPoint.x, mousePositionToWorldPoint.y, 0), Quaternion.identity, transform);
+                    playerC = Instantiate(player, new Vector3(mousePositionToWorldPoint.x, mousePositionToWorldPoint.y, 0), Quaternion.identity, transform).ConvertTo<Player>();
+                    playerC.playerInfoCanvas = Instantiate(playerConfigPrefab, panelPosition.position, Quaternion.identity);
                 }
             }
         }
     }
 
-    void RemovePrefab()
+    void OpenClosePlayerConfig()
     {
-        if (isRemovePrefabTrue)
+        RaycastHit2D ray = Physics2D.Raycast(mousePositionToWorldPoint, Vector3.forward, 300);
+        if (Input.GetMouseButton(0))
         {
-            if (Input.GetMouseButton(0))
+            if (ray)
             {
-                RaycastHit2D ray = Physics2D.Raycast(mousePositionToWorldPoint, Vector3.forward, 5);
-                if (ray)
+                if (ray.transform.tag == "Player")
                 {
-                    if(ray.transform.gameObject.tag == "Enemy")
+                    if (playerC.playerInfoCanvas != null)
                     {
-                        Destroy(ray.transform.gameObject.GetComponent<Enemy>().enemyHealthCanvas);
-                        Destroy(ray.transform.gameObject);
-                    }
-                    if (ray.transform.gameObject.tag == "Player")
-                    {
-                        Destroy(ray.transform.gameObject.GetComponent<Player>().playerHealthCanvas);
-                        Destroy(ray.transform.gameObject);
+                        if (!playerC.playerInfoCanvas.activeSelf && gameManager.enterEditMode)
+                        {
+                          playerC.playerInfoCanvas.SetActive(true);
+                        }
                     }
                 }
+
             }
-            if(Input.GetMouseButton(1))
-            {
-                isRemovePrefabTrue = false;
-            }    
         }
+
+        if (Input.GetMouseButton(1))
+        {
+            if (playerC != null)
+            {
+                if (playerC.playerInfoCanvas != null)
+                   playerC.playerInfoCanvas.SetActive(false);
+            }
+        }
+
     }
+
+        void RemovePrefab()
+        {
+            if (isRemovePrefabTrue)
+            {
+                if (Input.GetMouseButton(0))
+                {
+                    RaycastHit2D ray = Physics2D.Raycast(mousePositionToWorldPoint, Vector3.forward, 5);
+                    if (ray)
+                    {
+                        if (ray.transform.gameObject.tag == "Enemy")
+                        {
+                            Destroy(ray.transform.gameObject.GetComponent<Enemy>().enemyHealthCanvas);
+                            Destroy(ray.transform.gameObject);
+                        }
+                        if (ray.transform.gameObject.tag == "Player")
+                        {
+                            Destroy(ray.transform.gameObject.GetComponent<Player>().playerHealthCanvas);
+                            Destroy(ray.transform.gameObject);
+                        }
+                    }
+                }
+                if (Input.GetMouseButton(1))
+                {
+                    isRemovePrefabTrue = false;
+                }
+            }
+        }
+    
+
 }
