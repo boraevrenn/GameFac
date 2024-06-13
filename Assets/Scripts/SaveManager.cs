@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -16,9 +17,9 @@ public class SaveManager : MonoBehaviour
     [SerializeField] TileBase tile;
 
     private void Awake()
-    {
+    {   
         SingletonSaveManager();
-
+        CreateFolder();
     }
 
     private void Update()
@@ -29,6 +30,11 @@ public class SaveManager : MonoBehaviour
             environmentTileMap = GameObject.FindGameObjectWithTag("Environment").ConvertTo<Tilemap>();
 
 
+    }
+
+    void CreateFolder()
+    {
+        Directory.CreateDirectory("C:/Users/borae/AppData/LocalLow/Bora/GameFac/saves");
     }
 
     public void SaveGroundData()
@@ -48,7 +54,7 @@ public class SaveManager : MonoBehaviour
         }
 
         string json = JsonUtility.ToJson(converter, true);
-        File.WriteAllText(Application.dataPath + "/saves/groundSave.json", json);
+        File.WriteAllText(Application.persistentDataPath + "/saves/groundSave.json", json);
     }
 
     public void SaveEnvironmentData()
@@ -67,16 +73,16 @@ public class SaveManager : MonoBehaviour
             }
         }
         string json = JsonUtility.ToJson(converter,true);
-        File.WriteAllText(Application.dataPath + "/saves/environmentSave.json", json);
+        File.WriteAllText(Application.persistentDataPath + "/saves/environmentSave.json", json);
     }
 
     public void LoadEnvironmentData()
     {
         EnvironmentConverter conventer = new EnvironmentConverter();
         conventer.convertData.Clear();
-        if (File.Exists(Application.dataPath + "/saves/environmentSave.json"))
+        if (File.Exists(Application.persistentDataPath + "/saves/environmentSave.json"))
         {
-            string json = File.ReadAllText(Application.dataPath + "/saves/environmentSave.json");
+            string json = File.ReadAllText(Application.persistentDataPath + "/saves/environmentSave.json");
             conventer = JsonUtility.FromJson<EnvironmentConverter>(json);
             for (int i = 0; i < conventer.convertData.Count; i++)
             {
@@ -90,9 +96,9 @@ public class SaveManager : MonoBehaviour
     public void LoadGroundData()
     {
         GroundConverter converter = new GroundConverter();
-        if (File.Exists(Application.dataPath + "/saves/groundSave.json"))
+        if (File.Exists(Application.persistentDataPath + "/saves/groundSave.json"))
         {
-            string json = File.ReadAllText(Application.dataPath + "/saves/groundSave.json");
+            string json = File.ReadAllText(Application.persistentDataPath + "/saves/groundSave.json");
             converter = JsonUtility.FromJson<GroundConverter>(json);
             groundTileMap.ClearAllTiles();
             for (int i = 0; i < converter.convertData.Count; i++)
